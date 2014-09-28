@@ -14,11 +14,13 @@ class Metasploit::Model::Engine < Rails::Engine
 
   # Remove ActiveSupport::Dependencies loading paths to save time during constant resolution and to ensure that
   # metasploit-model is properly declaring all autoloads and not falling back on ActiveSupport::Dependencies
-  config.paths.each_value do |path|
-    path.skip_autoload!
-    path.skip_autoload_once!
-    path.skip_eager_load!
-    path.skip_load_path!
+  if config.paths.respond_to? 'each_value'
+    config.paths.each_value do |path|
+      path.skip_autoload!
+      path.skip_autoload_once!
+      path.skip_eager_load!
+      path.skip_load_path!
+    end
   end
 
   initializer 'metasploit-model.prepend_factory_path', :after => 'factory_girl.set_factory_paths' do
